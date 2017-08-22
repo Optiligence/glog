@@ -46,7 +46,11 @@ set (CMAKE_DEBUG_POSTFIX d)
 set (CMAKE_THREAD_PREFER_PTHREAD 1)
 
 if (WITH_GFLAGS)
-  find_package (gflags 2.2.0)
+  if (NOT DEFINED BUILD_SHARED_LIBS OR BUILD_SHARED_LIBS)
+    find_package (gflags 2.2.0 COMPONENTS shared)
+  else ()
+    find_package (gflags 2.2.0 COMPONENTS static)
+  endif()
 
   if (gflags_FOUND)
     set (HAVE_LIB_GFLAGS 1)
@@ -485,7 +489,7 @@ if (gflags_FOUND)
 
   if (NOT BUILD_SHARED_LIBS)
     # Don't use __declspec(dllexport|dllimport) if this is a static build
-    targeT_compile_definitions (glog PUBLIC GFLAGS_DLL_DECLARE_FLAG= GFLAGS_DLL_DEFINE_FLAG=)
+    #targeT_compile_definitions (glog PUBLIC GFLAGS_DLL_DECLARE_FLAG= GFLAGS_DLL_DEFINE_FLAG=)
   endif (NOT BUILD_SHARED_LIBS)
 endif (gflags_FOUND)
 
